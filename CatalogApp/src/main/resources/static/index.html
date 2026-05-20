@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Lendas - Process catalog</title>
+    <link rel="icon" type="image/x-icon" href="favico.png">
+    <!-- Resource hints for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/data-display.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/notifications.css">
+
+    <!-- Scripts with defer for better performance -->
+    <script src="js/shared/logger.js" defer></script>
+    <script src="js/shared/i18n.js" defer></script>
+    <script src="js/shared/catalog-entry-renderer.js" defer></script>
+    <script src="js/shared/catalog-detail-renderer.js" defer></script>
+    <script src="js/modules/ApiService.js" defer></script>
+    <script src="js/utils.js" defer></script>
+    <script src="js/notifications.js" defer></script>
+    <script src="js/app.js" defer></script>
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>Explore the process catalog</h1>
+            <p class="lead">Discover environmental and scientific data</p>
+        </header>
+
+        <form id="search-form">
+            <div class="field">
+                <label for="lang">Language</label>
+                <select id="lang" name="lang" required>
+                    <option value="spa">Spanish</option>
+                    <option value="glg">Galician</option>
+                    <option value="eng">English</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="filter">Filter</label>
+                <input id="filter" name="filter" type="text" placeholder="Enter search terms">
+            </div>
+            <button type="submit" id="search-button">Search</button>
+            <div id="status"></div>
+        </form>
+
+        <section id="results" aria-live="polite" aria-busy="false">
+            <div class="empty-state">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 1rem; opacity: 0.5;">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+                <br>Use the form to start a search
+            </div>
+        </section>
+    </main>
+
+    <div id="feature-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="feature-modal-title" hidden>
+        <div class="modal__backdrop" data-modal-dismiss></div>
+        <div class="modal__dialog">
+            <header class="modal__header">
+                <h2 id="feature-modal-title">Feature type detail</h2>
+                <button type="button" class="modal__close" data-modal-dismiss aria-label="Close">×</button>
+            </header>
+            <div class="modal__content" id="feature-modal-content"></div>
+        </div>
+    </div>
+</body>
+
+</html>
+

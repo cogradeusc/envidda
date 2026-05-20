@@ -1,0 +1,312 @@
+/* ============================================
+   DATA SECTIONS - Categorized Information
+   ============================================ */
+
+.data-section {
+    margin-bottom: var(--space-lg);
+}
+
+.data-section:last-child {
+    margin-bottom: 0;
+}
+
+.data-section .data-table {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+}
+
+/* ============================================
+   DATA TABLES - MODERN LAYOUT
+   ============================================ */
+
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.9375rem;
+}
+
+.data-table__row {
+    transition: background var(--transition-fast);
+}
+
+.data-table__row:hover {
+    background: var(--color-surface-alt);
+}
+
+.data-table__row + .data-table__row {
+    border-top: 1px solid var(--color-border-light);
+}
+
+/* Section Headers */
+.data-table__section-header {
+    background: linear-gradient(135deg, var(--color-primary-subtle), transparent);
+    border-radius: var(--radius-md);
+}
+
+.data-table__section-header th {
+    padding: var(--space-md) var(--space-lg);
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Modern Key-Value Layout */
+.data-table__key {
+    width: 200px;
+    text-align: left;
+    vertical-align: top;
+    padding: var(--space-md) var(--space-lg);
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.data-table__value {
+    padding: var(--space-md) var(--space-lg);
+    color: var(--color-text);
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.data-table__value > * + * {
+    margin-top: var(--space-sm);
+}
+
+/* Empty State */
+.data-table__empty {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface-alt);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    font-style: italic;
+}
+
+/* ============================================
+   DATA CARDS - Grouped Information
+   ============================================ */
+
+.data-card {
+    background: white;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+    transition: all var(--transition-base);
+}
+
+.data-card:hover {
+    border-color: var(--color-primary-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.data-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.data-card__icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary-subtle);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+}
+
+.data-card__title {
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--color-text);
+}
+
+.data-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.data-card__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-sm) 0;
+    border-bottom: 1px dashed var(--color-border-light);
+}
+
+.data-card__item:last-child {
+    border-bottom: none;
+}
+
+.data-card__label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+}
+
+.data-card__value {
+    font-size: 0.9375rem;
+    color: var(--color-text);
+    text-align: right;
+}
+
+/* ============================================
+   LISTS
+   ============================================ */
+
+.data-table__list {
+    margin: 0;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    list-style: none;
+}
+
+.data-table__list--periods {
+    gap: var(--space-md);
+}
+
+.data-table__list-item {
+    position: relative;
+    padding: var(--space-md);
+    background: white;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.data-table__list-item:hover {
+    border-color: var(--color-primary-light);
+    box-shadow: var(--shadow-xs);
+}
+
+.data-table__list-item::before {
+    display: none;
+}
+
+/* ============================================
+   NESTED TABLES
+   ============================================ */
+
+.data-table__nested {
+    border-radius: var(--radius-lg);
+    border: 1.5px solid var(--color-border);
+    background: var(--color-surface-alt);
+    padding: var(--space-lg);
+    overflow-x: auto;
+}
+
+.data-table__nested .data-table__key {
+    width: 180px;
+    font-size: 0.75rem;
+}
+
+.data-table__nested .data-table__value {
+    font-size: 0.875rem;
+}
+
+.data-table__nested .data-table__row:hover {
+    background: white;
+}
+
+/* ============================================
+   EQUIPMENT GRID
+   ============================================ */
+
+.equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg) var(--space-xl);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: white;
+}
+
+.equipment-grid__term {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    margin-bottom: var(--space-xs);
+}
+
+.equipment-grid__description {
+    font-size: 0.9375rem;
+    color: var(--color-text);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.equipment-grid__description .data-text {
+    background: var(--color-surface-alt);
+    border-color: var(--color-border);
+}
+
+.equipment-grid .data-table__nested {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.equipment-grid .data-table {
+    font-size: 0.875rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .data-table__key {
+        width: 140px;
+        font-size: 0.75rem;
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .data-table__value {
+        font-size: 0.875rem;
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .data-card {
+        padding: var(--space-md);
+    }
+
+    .data-card__item {
+        flex-direction: column;
+        gap: var(--space-xs);
+    }
+
+    .data-card__value {
+        text-align: left;
+    }
+
+    .equipment-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+}

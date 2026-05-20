@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Lendas - Vessel data query</title>
+    <link rel="icon" type="image/x-icon" href="favico.png">
+
+    <!-- Resource hints for performance -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/data-display.css">
+    <link rel="stylesheet" href="css/vessel.css">
+    <link rel="stylesheet" href="css/observation-common.css">
+    <link rel="stylesheet" href="css/availability-timeline.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/notifications.css">
+</head>
+
+<body>
+    <main>
+        <header class="page-hero">
+            <div class="page-hero__content">
+                <h1 id="page-title">Vessel data query</h1>
+            </div>
+            <div class="page-hero__actions">
+                <a class="page-hero__link" id="back-link" href="process-type.html?schema=vessel_sampling_ieo&name=vessel" aria-label="Back to process">
+                    ← Back to process
+                </a>
+            </div>
+        </header>
+
+        <form id="search-form">
+            <div class="field field--map">
+                <div class="map-panel">
+                    <div id="map" class="map-container"></div>
+                </div>
+                <div class="map-controls">
+                    <button type="button" id="clear-bbox" class="map-control-btn">Clear BBOX</button>
+                    <div id="bbox-display" class="bbox-display"></div>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <div class="field">
+                    <label for="start-date">Start date</label>
+                    <input id="start-date" name="start-date" type="datetime-local" required>
+                </div>
+                <div class="field">
+                    <label for="end-date">End date</label>
+                    <input id="end-date" name="end-date" type="datetime-local" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="procedures">Processes</label>
+                <input id="procedures" name="procedures" type="text"
+                    placeholder="E.g. 1,2,3"
+                    pattern="^[0-9,\s]+$"
+                    title="Enter comma-separated numbers">
+            </div>
+
+            <button type="submit" id="search-button">Search vessel data</button>
+            <div id="status"></div>
+        </form>
+
+        <section id="availability-section" aria-live="polite"></section>
+
+        <section id="results" aria-live="polite" aria-busy="false">
+            <div class="empty-state">Configure the filters and press "Search vessel data" to get results.</div>
+        </section>
+    </main>
+
+    <div id="feature-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="feature-modal-title" hidden>
+        <div class="modal__backdrop" data-modal-dismiss></div>
+        <div class="modal__dialog">
+            <header class="modal__header">
+                <h2 id="feature-modal-title">Observation detail</h2>
+                <button type="button" class="modal__close" data-modal-dismiss aria-label="Close">×</button>
+            </header>
+            <div class="modal__content" id="feature-modal-content"></div>
+        </div>
+    </div>
+
+    <div id="chart-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="chart-modal-title" hidden>
+        <div class="modal__backdrop" data-modal-dismiss></div>
+        <div class="modal__dialog modal__dialog--chart">
+            <header class="modal__header">
+                <div class="modal__header-content">
+                    <h2 id="chart-modal-title">Vessel time series</h2>
+                    <div class="modal__metadata" id="chart-metadata"></div>
+                </div>
+                <button type="button" class="modal__close" data-modal-dismiss aria-label="Close">×</button>
+            </header>
+            <div class="modal__content modal__content--chart">
+                <div class="chart-layout">
+                    <div class="chart-layout__main">
+                        <div class="chart-container-wrapper">
+                            <canvas id="temporal-series-chart"></canvas>
+                        </div>
+                    </div>
+                    <aside class="chart-layout__sidebar">
+                        <div class="chart-controls chart-controls--enhanced">
+                            <div class="chart-controls__section">
+                                <h3 class="chart-controls__section-title">Variables to display</h3>
+                                <div class="chart-controls__variables" id="variable-checkboxes"></div>
+                            </div>
+                            <div class="chart-controls__section chart-controls__actions">
+                                <button type="button" id="download-chart" class="chart-control-btn chart-control-btn--primary">
+                                    <span class="btn-icon">⬇</span> Download chart
+                                </button>
+                                <div class="chart-controls__secondary-actions">
+                                    <button type="button" id="select-all-vars" class="chart-control-btn chart-control-btn--text">Select all</button>
+                                    <button type="button" id="deselect-all-vars" class="chart-control-btn chart-control-btn--text">Deselect all</button>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script defer src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="js/modules/ApiService.js" defer></script>
+    <script src="js/shared/logger.js" defer></script>
+    <script src="js/shared/i18n.js" defer></script>
+    <script defer src="js/utils.js"></script>
+    <script defer src="js/notifications.js"></script>
+    <script defer src="js/shared/constants.js"></script>
+    <script defer src="js/shared/dom-helpers.js"></script>
+    <script defer src="js/shared/map-manager.js"></script>
+    <script defer src="js/shared/availability-style.js"></script>
+    <script defer src="js/shared/availability-renderer.js"></script>
+    <script defer src="js/shared/modal-manager.js"></script>
+    <script defer src="js/shared/chart-helpers.js"></script>
+    <script defer src="js/shared/wfs-client.js"></script>
+    <script defer src="js/shared/csv-exporter.js"></script>
+    <script defer src="js/vessel.js"></script>
+</body>
+
+</html>
+
+
+

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Lendas - Process type detail</title>
+    <link rel="icon" type="image/x-icon" href="favico.png">
+
+    <!-- Resource hints for performance -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/data-display.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/notifications.css">
+</head>
+
+<body>
+    <main>
+        <header class="page-hero">
+            <div class="page-hero__content">
+                <h1>Process type detail</h1>
+            </div>
+            <div class="page-hero__actions">
+                <a class="page-hero__link" href="index.html" aria-label="Back to process catalog">
+                    ← Back to catalog
+                </a>
+            </div>
+        </header>
+
+        <form id="search-form">
+            <div class="field">
+                <label for="schema">Schema</label>
+                <input id="schema" name="schema" type="text" readonly>
+            </div>
+            <div class="field">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" readonly>
+            </div>
+            <div class="field">
+                <label for="keyword">Keywords</label>
+                <input id="keyword" name="keyword" type="text" placeholder="Enter search terms">
+            </div>
+            <div class="field">
+                <label for="start-time">Start date and time</label>
+                <input id="start-time" name="start-time" type="datetime-local">
+            </div>
+            <div class="field">
+                <label for="end-time">End date and time</label>
+                <input id="end-time" name="end-time" type="datetime-local">
+            </div>
+            <button type="submit" id="search-button">Search</button>
+            <div id="status"></div>
+        </form>
+
+        <section id="results" aria-live="polite" aria-busy="false">
+            <div class="results-toolbar" id="results-toolbar" hidden>
+                <button type="button" class="results-toolbar__button" id="view-observations-button" disabled>
+                    View observations
+                </button>
+                <label class="process-card__selector results-toolbar__control" for="select-all-processes">
+                    <input class="process-card__selector-input" type="checkbox" id="select-all-processes">
+                    <span>Select all</span>
+                </label>
+            </div>
+            <div id="results-list">
+                <div class="empty-state">Use the form to start a search with the selected process type.</div>
+            </div>
+        </section>
+    </main>
+
+        <script src="js/shared/logger.js" defer></script>
+    <script src="js/shared/i18n.js" defer></script>
+    <script src="js/modules/ApiService.js" defer></script>
+    <script defer src="js/utils.js"></script>
+    <script defer src="js/shared/process-type-renderer.js"></script>
+    <script defer src="js/notifications.js"></script>
+    <script defer src="js/process-type.js"></script>
+</body>
+
+</html>
+
+
+
+
