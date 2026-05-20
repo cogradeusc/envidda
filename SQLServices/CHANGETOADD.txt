@@ -1,0 +1,73 @@
+Include a getDataAvailability operation that yields cube of data availability.
+10x10x10 (time, x, y)
+Values are the number of observations
+
+Parameters are: 
+SpatialFilter (rectangle) might be null
+TemporalFilter (period) might be null
+
+With this method we can explore the data availability at the end we can submit a request to get the observations.
+Depending on the observation type, this might be the end or we might explore a specific observation.
+
+
+-- Add height and generalize.
+
+CREATE TABLE data_avaliability_feb_2012_arousa AS 
+WITH extent AS (
+SELECT st_setsrid(st_extent(shape)::geometry,any_value(st_srid(shape))) AS spatial_extent,-- reemplazar shape por intersección con rectángulo espacial
+       (st_xmax(st_extent(shape))-st_xmin(st_extent(shape)))/10.0 AS resx,
+       st_xmin(st_extent(shape)) AS minx,
+       st_xmax(st_extent(shape)) AS maxx,
+       (st_ymax(st_extent(shape))-st_ymin(st_extent(shape)))/10.0 AS resy,
+       st_ymin(st_extent(shape)) AS miny,
+       st_ymax(st_extent(shape)) AS maxy,
+       tsrange(min(result_time), max(result_time), '[]') AS temporal_extent, --en función de configuración temporal cambiar esto.
+       EXTRACT(epoch FROM (max(result_time)-min(result_time)))/10.0 AS rest,
+       min(result_time) AS mint
+FROM ctd_intecmar.estacion AS f JOIN ctd_intecmar.observation_configuracion_ctd o ON f.fid=o.feature_of_interest
+WHERE st_intersects(st_makeenvelope(-9.07027,42.33304,-8.70208,42.70989, 4326),f.shape)
+  AND tsrange('2012-02-01','2012-03-01','[)') @> o.result_time
+),
+cells AS (
+SELECT it, iy, ix, count(o.result_time) AS observations
+FROM generate_series(0,9) AS rix(ix) CROSS JOIN 
+     generate_series(0,9) AS riy(iy) CROSS JOIN 
+     generate_series(0,9) AS rit(it) CROSS JOIN
+     extent AS e LEFT JOIN 
+     (ctd_intecmar.estacion AS f JOIN ctd_intecmar.observation_configuracion_ctd o ON f.fid=o.feature_of_interest)
+     ON st_intersects(f.shape,e.spatial_extent)
+     AND e.temporal_extent @> o.result_time --Cambiar en función del tipo de result_time
+     AND st_intersects(f.shape, st_makeenvelope(minx+ix*resx, miny+iy*resy, minx+(ix+1)*resx, miny+(iy+1)*resy, st_srid(e.spatial_extent)))
+     AND tsrange(mint+it*rest* INTERVAL '1 second',mint+(it+1)*rest* INTERVAL '1 second',CASE WHEN it=29 THEN '[]' ELSE '[)' END) @> o.result_time
+GROUP BY it, iy, ix
+),
+time_y AS (
+SELECT it, iy, array_agg(observations ORDER BY ix) AS observations
+FROM cells
+GROUP BY it, iy
+),
+time AS (
+SELECT it, array_agg(observations ORDER BY iy DESC) AS observations
+FROM time_y
+GROUP BY it
+)
+SELECT it,
+      st_setvalues(
+       ST_AddBand(
+         ST_MakeEmptyRaster(
+           10, 10,        -- columnas (x), filas (y)
+           e.minx, e.maxy,        -- upper-left X, Y
+           e.resx, -1*e.resy,       -- pixel size X, Y (Y negativo)
+           0, 0,        -- skew (0)
+           st_srid(e.spatial_extent)         -- SRID
+         ),
+         '32BF'::text,  -- Banda de tipo float32
+         0,             -- valor inicial
+         NULL           -- valor nodata
+       ),
+       1,
+       1,1,
+       t.observations::double precision[][]
+       ) AS rast
+FROM time t, extent e
+ORDER BY it
